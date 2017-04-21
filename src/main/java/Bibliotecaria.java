@@ -37,9 +37,10 @@ public class Bibliotecaria {
 	}
 	
 	public boolean emprestarLivro(Usuario user, Livro livro){
-		if(user.isBlocked() || livro.isEmprestado())
+		if(user.isBlocked() || !livro.isDisponivel())
 			return false;
 		livro.emprestar(user);
+		livroDB.updateLivro(livro.getId());
 		emprestimoDB.registrarEmprestimo(livro);
 		return true;
 	}
@@ -51,6 +52,8 @@ public class Bibliotecaria {
 		if(aux.isBlocked()){
 			unBlockUser(user);
 		}
+		livro.devolver();
+		livroDB.updateLivro(livro.getId());
 		emprestimoDB.registrarDevolucao(livro);
 		return true;
 	}

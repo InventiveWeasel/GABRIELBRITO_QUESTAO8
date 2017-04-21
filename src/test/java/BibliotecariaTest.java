@@ -18,8 +18,8 @@ public class BibliotecariaTest {
 		livroDB = mock(LivroDB.class);
 		emprestimoDB = mock(EmprestimoDB.class);
 		bib = new Bibliotecaria(userDB, livroDB, emprestimoDB);
-		user = new Usuario();
-		user2 = new Usuario();
+		user = new Usuario(livroDB);
+		user2 = new Usuario(livroDB);
 		livro = new Livro("Naruto", "Masashi Kishimoto");
 		livro2 = new Livro("Microfisica", "Foucault");
 	}
@@ -87,5 +87,20 @@ public class BibliotecariaTest {
 		bib.blockUser(user, 7);
 		bib.devolverLivro(user, livro);
 		assertTrue(bib.emprestarLivro(user, livro2));
+	}
+	
+	@Test
+	public void whenUserChecksBookStatus(){
+		String status;
+		String titulo = "Naruto";
+		String autor = "Masashi Kishimoto";
+		bib.inserirLivro(livro);
+		when(user.checkBookStatus(titulo, autor)).thenReturn("disponivel");
+		status = user.checkBookStatus(titulo, autor);
+		assertTrue(status.equals("disponivel"));
+		when(user.checkBookStatus(titulo, autor)).thenReturn("retirado");
+		status = user.checkBookStatus(titulo, autor);
+		assertTrue(status.equals("retirado"));
+		
 	}
 }

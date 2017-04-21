@@ -4,12 +4,14 @@ public class Usuario {
 	private static int IdCounter=1;
 	private boolean Blocked;
 	private int prazo;
+	private LivroDB livroDB;
 	
-	public Usuario(){
+	public Usuario(LivroDB livroDB){
 		id = IdCounter;
 		IdCounter++;
 		Blocked = false;
 		prazo = 0;
+		this.livroDB = livroDB;
 	}
 	
 	public int getId(){
@@ -29,6 +31,10 @@ public class Usuario {
 	
 	public boolean isBlocked(){
 		return Blocked;
+	}
+	
+	public String checkBookStatus(String titulo, String autor){
+		return livroDB.getLivroStatus(titulo, autor);
 	}
 	
 }

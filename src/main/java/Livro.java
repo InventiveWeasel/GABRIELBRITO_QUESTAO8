@@ -4,7 +4,7 @@ public class Livro {
 	private String titulo;
 	private int id;
 	private static int idCounter = 1;
-	private boolean isEmprestado;
+	private String status;
 	private Usuario emprestador;
 	
 	public Livro(String titulo, String autor){
@@ -12,7 +12,7 @@ public class Livro {
 		this.titulo = titulo;
 		this.id = idCounter;
 		idCounter++;
-		isEmprestado = false;
+		status = "disponivel";
 		emprestador = null;
 	}
 	
@@ -24,12 +24,19 @@ public class Livro {
 		return this.emprestador;
 	}
 	
-	public boolean isEmprestado(){
-		return isEmprestado;
+	public boolean isDisponivel(){
+		if(status.equals("disponivel"))
+			return true;
+		return false;
 	}
 	
 	public void emprestar(Usuario user){
-		isEmprestado = true;
+		status = "retirado";
 		emprestador = user;
+	}
+	
+	public void devolver(){
+		status = "disponivel";
+		emprestador = null;
 	}
 }
