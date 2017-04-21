@@ -2,10 +2,12 @@
 public class Bibliotecaria {
 	UsuarioDB userDB;
 	LivroDB livroDB;
+	EmprestimoDB emprestimoDB;
 	
-	public Bibliotecaria(UsuarioDB userDB, LivroDB livroDB){
+	public Bibliotecaria(UsuarioDB userDB, LivroDB livroDB, EmprestimoDB emprestimoDB){
 		this.userDB = userDB;
 		this.livroDB = livroDB;
+		this.emprestimoDB = emprestimoDB;
 	}
 	
 	public boolean inserirUsuario(Usuario user){
@@ -29,10 +31,27 @@ public class Bibliotecaria {
 		userDB.updateUser(user.getId());
 	}
 	
+	public void unBlockUser(Usuario user){
+		user.unblock();
+		userDB.updateUser(user.getId());
+	}
+	
 	public boolean emprestarLivro(Usuario user, Livro livro){
 		if(user.isBlocked() || livro.isEmprestado())
 			return false;
 		livro.emprestar(user);
+		emprestimoDB.registrarEmprestimo(livro);
+		return true;
+	}
+	
+	public boolean devolverLivro(Usuario user, Livro livro){
+		Usuario aux = livro.getEmprestador();
+		if(aux.getId() != user.getId())
+			return false;
+		if(aux.isBlocked()){
+			unBlockUser(user);
+		}
+		emprestimoDB.registrarDevolucao(livro);
 		return true;
 	}
 }

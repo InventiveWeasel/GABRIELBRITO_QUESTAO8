@@ -24,6 +24,7 @@ public class Usuario {
 	
 	public void unblock(){
 		Blocked = false;
+		this.prazo = 0;
 	}
 	
 	public boolean isBlocked(){

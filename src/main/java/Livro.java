@@ -20,6 +20,10 @@ public class Livro {
 		return this.id;
 	}
 	
+	public Usuario getEmprestador(){
+		return this.emprestador;
+	}
+	
 	public boolean isEmprestado(){
 		return isEmprestado;
 	}

@@ -7,18 +7,21 @@ import org.junit.Test;
 public class BibliotecariaTest {
 	UsuarioDB userDB;
 	LivroDB livroDB;
+	EmprestimoDB emprestimoDB;
 	Bibliotecaria bib;
 	Usuario user, user2;
-	Livro livro;
+	Livro livro, livro2;
 
 	@Before
 	public void setup(){
 		userDB = mock(UsuarioDB.class);
 		livroDB = mock(LivroDB.class);
-		bib = new Bibliotecaria(userDB, livroDB);
+		emprestimoDB = mock(EmprestimoDB.class);
+		bib = new Bibliotecaria(userDB, livroDB, emprestimoDB);
 		user = new Usuario();
 		user2 = new Usuario();
 		livro = new Livro("Naruto", "Masashi Kishimoto");
+		livro2 = new Livro("Microfisica", "Foucault");
 	}
 	@Test
 	public void testAddUser() {
@@ -62,5 +65,27 @@ public class BibliotecariaTest {
 	public void whenUserIsBlockedAndBorrowThenReturnFalse(){
 		bib.blockUser(user, 7);
 		assertFalse(bib.emprestarLivro(user, livro));
+	}
+	
+	@Test
+	public void whenUserRetrieveBookTheReturnTrue(){
+		bib.inserirLivro(livro);
+		bib.emprestarLivro(user, livro);
+		assertTrue(bib.devolverLivro(user, livro));
+	}
+	
+	@Test
+	public void whenUserRetrieveBookThatHadNotBorrowedTheReturnFalse(){
+		bib.inserirLivro(livro);
+		bib.emprestarLivro(user, livro);
+		assertFalse(bib.devolverLivro(user2, livro));
+	}
+	
+	@Test
+	public void whenUserIsUnblockedAndTriesToBorrowThenReturnTrue(){
+		bib.emprestarLivro(user, livro);
+		bib.blockUser(user, 7);
+		bib.devolverLivro(user, livro);
+		assertTrue(bib.emprestarLivro(user, livro2));
 	}
 }
